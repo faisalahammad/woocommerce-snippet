@@ -1,5 +1,5 @@
 # WooCommerce Smart Snippet
-Customize your WooCommerce store using those quick snippets — no need to create a child theme or technical knowledge. Just follow our videos on YouTube.
+Customize your WooCommerce store using those quick snippets — no need to create a child theme or technical knowledge. Use `Code Snippets` Plugin to add those code without `Child Theme`.
 
 ### WooCommerce discount on 2nd cart item
 ```php
