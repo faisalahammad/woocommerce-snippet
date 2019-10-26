@@ -39,3 +39,16 @@ function our_privacy_message_below_checkout_button() {
 }
 ```
 
+---
+
+### Product short description / excerpt on Cart / Checkout page
+```php
+function wc_checkout_description_on_cart_checkout( $other_data, $cart_item ) {
+    $post_data = get_post( $cart_item['product_id'] );
+    $other_data[] = array( 'name' =>  $post_data->post_excerpt );
+    return $other_data;
+}
+
+add_filter( 'woocommerce_get_item_data', 'wc_checkout_description_on_cart_checkout', 10, 2 );
+```
+
