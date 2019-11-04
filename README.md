@@ -52,3 +52,19 @@ function wc_checkout_description_on_cart_checkout( $other_data, $cart_item ) {
 add_filter( 'woocommerce_get_item_data', 'wc_checkout_description_on_cart_checkout', 10, 2 );
 ```
 
+---
+
+### Remove `SKIP LOGIN` from Multi-Step Checkout page
+```js
+if( $('#timeline-login').hasClass('active') ) {
+  $('#form_actions').hide();
+}
+```
+
+---
+
+### Rename Coupon Code to Discount Code on `Cart & Checkout` page
+```js
+$('#coupon_code').attr('placeholder','Discount Code');
+$('.coupon button.button').text('Apply Discount');
+```
