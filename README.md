@@ -1,5 +1,5 @@
 # WooCommerce Smart Snippet
-Customize your WooCommerce store using those quick snippets — no need to create a child theme or technical knowledge. Use `Code Snippets` Plugin to add those code without `Child Theme`.
+Customize your WooCommerce store using those quick snippets — no need to create a child theme or technical knowledge. Use [Code Snippets](https://wordpress.org/plugins/code-snippets) Plugin to add those code without `Child Theme`.
 
 ### WooCommerce discount on 2nd cart item
 ```php
@@ -50,6 +50,17 @@ function wc_checkout_description_on_cart_checkout( $other_data, $cart_item ) {
 }
 
 add_filter( 'woocommerce_get_item_data', 'wc_checkout_description_on_cart_checkout', 10, 2 );
+
+// This one much batter
+function add_excerpt_in_cart_item_name( $item_name,  $cart_item,  $cart_item_key ){
+    $excerpt = get_the_excerpt($cart_item['product_id']);
+    $style = ' style="font-size:14px; line-height:normal;"';
+    $excerpt_html = '<br>
+        <p name="short-description"'.$style.'>'.$excerpt.'</p>';
+
+    return $item_name . $excerpt_html;
+}
+add_filter( 'woocommerce_cart_item_name', 'add_excerpt_in_cart_item_name', 10, 3 );
 ```
 
 ---
@@ -64,7 +75,79 @@ if( $('#timeline-login').hasClass('active') ) {
 ---
 
 ### Rename Coupon Code to Discount Code on `Cart & Checkout` page
+:point_right: jQuery Code
 ```js
-$('#coupon_code').attr('placeholder','Discount Code');
-$('.coupon button.button').text('Apply Discount');
+$('.checkout_coupon.woocommerce-form-coupon p:first-child').text('If you have a discount code, please apply it below.');
+```
+
+:point_right: PHP Code
+```php
+add_filter('gettext', 'woocommerce_rename_coupon_field_on_cart', 10, 3 );
+add_filter('gettext', 'woocommerce_rename_coupon_field_on_cart', 10, 3 );
+add_filter('woocommerce_coupon_error', 'rename_coupon_label', 10, 3);
+add_filter('woocommerce_coupon_message', 'rename_coupon_label', 10, 3);
+add_filter('woocommerce_cart_totals_coupon_label', 'rename_coupon_label',10, 1);
+add_filter('woocommerce_checkout_coupon_message', 'woocommerce_rename_coupon_message_on_checkout' );
+
+
+function woocommerce_rename_coupon_field_on_cart( $translated_text, $text, $text_domain ) {
+    // bail if not modifying frontend woocommerce text
+    if ( is_admin() || 'woocommerce' !== $text_domain ) {
+        return $translated_text;
+    }
+    if ( 'Coupon:' === $text ) {
+        $translated_text = 'Discount Code:';
+    }
+
+    if ('Coupon has been removed.' === $text){
+        $translated_text = 'Discount code has been removed.';
+    }
+
+    if ( 'Apply coupon' === $text ) {
+        $translated_text = 'Apply Discount';
+    }
+
+    if ( 'Coupon code' === $text ) {
+        $translated_text = 'Discount Code';
+    
+    } 
+
+    return $translated_text;
+}
+
+
+// rename the "Have a Coupon?" message on the checkout page
+function woocommerce_rename_coupon_message_on_checkout() {
+    return 'Have an Discount Code?' . ' ' . __( 'Click here to enter your code', 'woocommerce' ) . '';
+}
+
+
+function rename_coupon_label($err, $err_code=null, $something=null){
+    $err = str_ireplace("Coupon","Discount Code ",$err);
+    return $err;
+}
+```
+
+
+---
+
+### Change `Return to shop` text & URL
+```php
+// URL
+add_filter( 'woocommerce_return_to_shop_redirect', 'bbloomer_change_return_shop_url' );
+ 
+function bbloomer_change_return_shop_url() {
+    return "/subscribe";
+}
+
+// Text
+add_filter( 'gettext', 'change_woocommerce_return_to_shop_text', 20, 3 );
+function change_woocommerce_return_to_shop_text( $translated_text, $text, $domain ) {
+    switch ( $translated_text ) {
+        case 'Return to shop' :
+            $translated_text = __( 'SUBSCRIBE', 'woocommerce' );
+            break;
+    }
+    return $translated_text; 
+}
 ```
