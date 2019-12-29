@@ -118,7 +118,7 @@ function woocommerce_rename_coupon_field_on_cart( $translated_text, $text, $text
 
 // rename the "Have a Coupon?" message on the checkout page
 function woocommerce_rename_coupon_message_on_checkout() {
-    return 'Have an Discount Code?' . ' ' . __( 'Click here to enter your code', 'woocommerce' ) . '';
+    return 'Have an Discount Code?' . ' ' . __( '<a href="#" class="showcoupon">Click here to enter your code</a>', 'woocommerce' ) . '';
 }
 
 
@@ -149,5 +149,22 @@ function change_woocommerce_return_to_shop_text( $translated_text, $text, $domai
             break;
     }
     return $translated_text; 
+}
+```
+
+---
+
+### Block specific states on checkout
+```php
+add_filter( 'woocommerce_states', 'custom_ca_states', 10, 1 );
+function custom_ca_states( $states ) {
+    $non_allowed_ca_states = array( 'AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'PE', 'QC', 'SK', 'NT', 'NU', 'YT'); 
+
+    // Loop through your non allowed CA states and remove them
+    foreach( $non_allowed_ca_states as $state_code ) {
+        if( isset($states['CA'][$state_code]) )
+            unset( $states['CA'][$state_code] );
+    }
+    return $states;
 }
 ```
