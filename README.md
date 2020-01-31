@@ -168,3 +168,35 @@ function custom_ca_states( $states ) {
     return $states;
 }
 ```
+
+---
+
+### Display the discount percentage on the sale badge
+```php
+add_filter( 'woocommerce_sale_flash', 'add_percentage_to_sale_badge', 20, 3 );
+function add_percentage_to_sale_badge( $html, $post, $product ) {
+    if( $product->is_type('variable')){
+        $percentages = array();
+
+        // Get all variation prices
+        $prices = $product->get_variation_prices();
+
+        // Loop through variation prices
+        foreach( $prices['price'] as $key => $price ){
+            // Only on sale variations
+            if( $prices['regular_price'][$key] !== $price ){
+                // Calculate and set in the array the percentage for each variation on sale
+                $percentages[] = round(100 - ($prices['sale_price'][$key] / $prices['regular_price'][$key] * 100));
+            }
+        }
+        // We keep the highest value
+        $percentage = max($percentages) . '%';
+    } else {
+        $regular_price = (float) $product->get_regular_price();
+        $sale_price    = (float) $product->get_sale_price();
+
+        $percentage    = round(100 - ($sale_price / $regular_price * 100)) . '%';
+    }
+    return '<span class="onsale">' . esc_html__( 'SALE', 'woocommerce' ) . ' ' . $percentage . '</span>';
+}
+```
