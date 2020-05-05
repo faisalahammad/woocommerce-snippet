@@ -30,6 +30,18 @@ $count = 0;
 
 --- 
 
+### Disable Out of Stock Variations
+```php
+function bbloomer_grey_out_variations_out_of_stock( $is_active, $variation ) {
+    if ( ! $variation->is_in_stock() ) return false;
+    return $is_active;
+}
+
+add_filter( 'woocommerce_variation_is_active', 'bbloomer_grey_out_variations_out_of_stock', 10, 2 )
+```
+
+---
+
 ### Add Content Under “Place Order” Button
 ```php
 add_action( 'woocommerce_review_order_after_submit', 'our_privacy_message_below_checkout_button' );
