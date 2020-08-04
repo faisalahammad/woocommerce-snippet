@@ -212,3 +212,54 @@ function add_percentage_to_sale_badge( $html, $post, $product ) {
     return '<span class="onsale">' . esc_html__( 'SALE', 'woocommerce' ) . ' ' . $percentage . '</span>';
 }
 ```
+
+---
+
+### Change “Proceed to Checkout” , “Add to cart” & “View Cart” button text
+
+```php
+/*Proceed to Checkout*/
+remove_action( 'woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20 ); 
+add_action('woocommerce_proceed_to_checkout', 'sm_woo_custom_checkout_button_text',20);
+
+function sm_woo_custom_checkout_button_text() {
+    $checkout_url = WC()->cart->get_checkout_url();
+  ?>
+    <a href="<?php echo $checkout_url; ?>" class="checkout-button button alt wc-forward">
+        <?php  _e( 'Check On Out', 'woocommerce' ); ?>
+    </a> 
+  <?php
+} 
+
+
+/*Add to cart*/
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'sm_woo_custom_cart_button_text' );
+add_filter( 'woocommerce_product_add_to_cart_text', 'sm_woo_custom_cart_button_text' );   
+ 
+function sm_woo_custom_cart_button_text() {
+    return __( 'Add to basket', 'woocommerce' );
+}
+
+/*View Cart*/
+function sm_text_view_cart_strings( $translated_text, $text, $domain ) {
+    switch ( $translated_text ) {
+        case 'View Cart' :
+            $translated_text = __( 'Check On Out', 'woocommerce' );
+            break;
+    }
+    return $translated_text;
+}
+add_filter( 'gettext', 'sm_text_view_cart_strings', 20, 3 );
+```
+
+---
+
+### Change Empty Cart Message
+
+```php
+add_filter( 'wc_empty_cart_message', 'custom_wc_empty_cart_message' );
+
+function custom_wc_empty_cart_message() {
+	return 'Checkout is not available while your cart is empty.';
+}
+```
