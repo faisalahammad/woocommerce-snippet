@@ -263,3 +263,13 @@ function custom_wc_empty_cart_message() {
 	return 'Checkout is not available while your cart is empty.';
 }
 ```
+
+### Limit the Cart to One Product per Checkout
+```php
+add_filter( 'woocommerce_add_to_cart_validation', 'nexyta_only_one_in_cart', 99, 2);
+   
+function nexyta_only_one_in_cart( $passed, $added_product_id ) {
+   wc_empty_cart();
+   return $passed;
+}
+```
