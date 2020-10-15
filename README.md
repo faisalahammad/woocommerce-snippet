@@ -273,3 +273,22 @@ function nexyta_only_one_in_cart( $passed, $added_product_id ) {
    return $passed;
 }
 ```
+
+---
+
+### WooCommerce disable logout confirmation
+```php
+/**
+ * Bypass logout confirmation.
+ */
+function nexyta_bypass_logout_confirmation() {
+	global $wp;
+
+	if ( isset( $wp->query_vars['customer-logout'] ) ) {
+		wp_redirect( str_replace( '&amp;', '&', wp_logout_url( wc_get_page_permalink( 'your-page-url' ) ) ) );
+		exit;
+	}
+}
+
+add_action( 'template_redirect', 'nexyta_bypass_logout_confirmation' );
+```
