@@ -292,3 +292,39 @@ function nexyta_bypass_logout_confirmation() {
 
 add_action( 'template_redirect', 'nexyta_bypass_logout_confirmation' );
 ```
+
+---
+
+### Sell to specific States
+
+**Sell to only one State**
+```php
+add_filter( 'woocommerce_states', 'nexyta_restrict_states' );
+
+function nexyta_restrict_states( $states ) {
+
+    $states['US'] = array(
+        'CA' => __( 'California', 'woocommerce' ),
+    );
+
+    return $states;
+}
+```
+
+**Sell to few States**
+```php
+add_filter( 'woocommerce_states', 'wpglorify_restrict_states' );
+function wpglorify_restrict_states( $states ) {
+
+	$states['US'] = array(
+		'AL' => __( 'Alabama', 'woocommerce' ),
+		'AK' => __( 'Alaska', 'woocommerce' ),
+		'AZ' => __( 'Arizona', 'woocommerce' ),
+		'AR' => __( 'Arkansas', 'woocommerce' ),
+		'CA' => __( 'California', 'woocommerce' ),
+		'CO' => __( 'Colorado', 'woocommerce' )
+	);
+
+	return $states;
+}
+```
